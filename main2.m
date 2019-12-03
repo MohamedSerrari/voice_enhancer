@@ -3,33 +3,48 @@ close all;
 clc;
 
 %%
-load('fcno04fz');
+load('fcno04fz.mat');
 signal = fcno04fz;
 signal = signal';
 fe     = 8000;
-RSB    = 15;
+RSB    = 10;
 
 % soundsc(signal);
 
-[signal_bruite, sigma_noise2] = ajout_bruit(RSB,signal);
-signal_filtre = filter_signal(signal_bruite);
+%%
+[signal_bruite, sigma_noise2] = ajout_bruit(RSB, signal);
+soundsc(signal_bruite);
 
 %%
+[signal_filtre, rmse_evolution] = filter_signal(signal_bruite, signal);
+soundsc(signal_filtre);
+
+%%
+[w, h] = size(rmse_evolution);
+[X, Y] = meshgrid(1:w, 1:h);
+% imagesc(evolution.')
 figure
-subplot(3,1,1)
-plot(signal)
-title('signal original')
-xlim([1e4, 2e4]);
+plot(rmse_evolution(1:end, 330))
+figure
+surf(X, Y, rmse_evolution.');
+shading interp
 
-subplot(3,1,2)
-plot(signal_bruite);
-title('signal bruite')
-xlim([1e4, 2e4]);
-
-subplot(3,1,3)
-plot(signal_filtre);
-title('signal filtre')
-xlim([1e4, 2e4]);
+%%
+% figure
+% subplot(3,1,1)
+% plot(signal)
+% title('signal original')
+% xlim([1e4, 2e4]);
+% 
+% subplot(3,1,2)
+% plot(signal_bruite);
+% title('signal bruite')
+% xlim([1e4, 2e4]);
+% 
+% subplot(3,1,3)
+% plot(signal_filtre);
+% title('signal filtre')
+% xlim([1e4, 2e4]);
 % 
 % figure
 % subplot(3,1,1) 
@@ -44,7 +59,7 @@ xlim([1e4, 2e4]);
 % spectrogram(signal_filtre),colorbar
 % title('spectrogramme du signal filtre')
 
-soundsc(signal_filtre);
+% soundsc(signal_filtre);
 % % soundsc(signal_bruite);
 
 %%
