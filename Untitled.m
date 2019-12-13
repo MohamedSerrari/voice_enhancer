@@ -91,7 +91,11 @@ legend('Packet original', 'Packet bruite', 'Packet filtre')
 soundsc(packet_filtered1);
 
 %%
+winopen()
+
+%%
 % soundsc(packet_nonoise);
-
-
-
+[file,path] = uigetfile('*.mat');
+data = struct2cell(load(strcat(path, file)));
+signal = data{1}.';
+% a = uiopen('*.mat')
