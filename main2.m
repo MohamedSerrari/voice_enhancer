@@ -9,25 +9,31 @@ signal = signal';
 fe     = 8000;
 RSB    = 10;
 
+noise_reduction = 3;
+
 % soundsc(signal);
 
 %%
 [signal_bruite, sigma_noise2] = ajout_bruit(RSB, signal);
-soundsc(signal_bruite);
 
 %%
-[signal_filtre, rmse_evolution] = filter_signal(signal_bruite, signal);
+% soundsc(signal_bruite);
+
+%%
+signal_filtre = filter_signal(signal_bruite, sigma_noise2, noise_reduction);
+
+%%
 soundsc(signal_filtre);
 
 %%
-[w, h] = size(rmse_evolution);
-[X, Y] = meshgrid(1:w, 1:h);
-% imagesc(evolution.')
-figure
-plot(rmse_evolution(1:end, 330))
-figure
-surf(X, Y, rmse_evolution.');
-shading interp
+% [w, h] = size(rmse_evolution);
+% [X, Y] = meshgrid(1:w, 1:h);
+% % imagesc(evolution.')
+% figure
+% plot(rmse_evolution(1:end, 75))
+% figure
+% surf(X, Y, rmse_evolution.');
+% shading interp
 
 %%
 % figure

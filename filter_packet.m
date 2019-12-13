@@ -1,8 +1,8 @@
-function [packet_filtered, rmse] = filter_packet(packet_bruite, packet_original, ratio)
+function [packet_filtered] = filter_packet(packet_bruite, sigma_noise2, noise_reduction)
 %% Variables
 % M = N*ratio (number of columns) et L = N*(1-ratio) + 1
 N = length(packet_bruite);
-M = floor(N * ratio);
+M = floor(N * 1/3);
 L = N + 1 - M;
 
 %% Constructing the hanckel matrix
@@ -14,39 +14,19 @@ h = hankel(c,r);
 [U,S,V] = svd(h, 'econ');
 sing_vals = diag(S).';
 
-rmse = zeros(M,1);
-
-%% Calculating rmse for all values of K
-for K=1:M
-    % Extracting dominant singular values
-    simga_main_vals = diag([sing_vals(1:K), zeros(1,M-K)]);
-
-    % Reconstructing signal
-    H_filtered = U * simga_main_vals * V.';
-    packet_filtered = [H_filtered(1:end,1).' H_filtered(end,2:end)];
-    
-    % root mean square error
-    rmse(K) = sqrt(sum(abs(packet_filtered - packet_original).^2) / N);
-end
-
 %% Reconstructing signal
+threshold = noise_reduction * sqrt(M*sigma_noise2);
+rank = find(sing_vals > threshold);
 
-% diff = abs(rmse(1:end-1) - rmse(2:end));
-% diff = diff/max(diff);
-% improve = find(diff > 0.99);
-% K = improve(end);
-
-[~, K] = min(rmse);
-
-if K < 5
+if isempty(rank)
     K = 0;
+else
+    K = rank(end);
 end
-
-% K = 12;
-
-simga_main_vals = diag([diag(S(1:K,1:K)).', zeros(1,M-K)]);
+% simga_main_vals = diag([sing_vals(1:K), 0.01*sing_vals(K+1:end)]);
+simga_main_vals = diag([sing_vals(1:K), zeros(1,M-K)]);
 H_filtered = U * simga_main_vals * V.';
-packet_filtered = [H_filtered(1:end,1).' H_filtered(end,2:end)];
 
+packet_filtered = anti_diag_avg(H_filtered);
 end
 
