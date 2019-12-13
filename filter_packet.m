@@ -23,9 +23,9 @@ if isempty(rank)
 else
     K = rank(end);
 end
-Fk = 1 - sigma_noise2./sing_vals(1:K).^2;
-simga_main_vals = diag([Fk.*sing_vals(1:K), 0.001*sing_vals(K+1:end)]);
-% simga_main_vals = diag([sing_vals(1:K), zeros(1,M-K)]);
+% Fk = 1 - sigma_noise2./sing_vals(1:K).^2;
+% simga_main_vals = diag([Fk.*sing_vals(1:K), 0.001*sing_vals(K+1:end)]);
+simga_main_vals = diag([sing_vals(1:K), zeros(1,M-K)]);
 H_filtered = U * simga_main_vals * V.';
 
 packet_filtered = anti_diag_avg(H_filtered);

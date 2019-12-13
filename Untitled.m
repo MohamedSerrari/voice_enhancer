@@ -96,6 +96,4 @@ winopen()
 %%
 % soundsc(packet_nonoise);
 [file,path] = uigetfile('*.mat');
-data = struct2cell(load(strcat(path, file)));
-signal = data{1}.';
-% a = uiopen('*.mat')
+[y, fs] = audioread(strcat(path, file));

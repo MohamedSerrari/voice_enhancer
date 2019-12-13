@@ -9,7 +9,7 @@ signal = signal';
 fe     = 8000;
 RSB    = 10;
 
-noise_reduction = 3; %4/sqrt(3); % 3;
+noise_reduction = 5/sqrt(3); % 3;
 
 %soundsc(signal);
 
@@ -20,7 +20,8 @@ noise_reduction = 3; %4/sqrt(3); % 3;
 %soundsc(signal_bruite);
 
 %%
-signal_filtre = filter_signal(signal_bruite, sigma_noise2, noise_reduction);
+packet_len = 400;
+signal_filtre = filter_signal(signal_bruite, 400, sigma_noise2, noise_reduction);
 
 %%
 soundsc(signal_filtre);
