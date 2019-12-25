@@ -33,7 +33,7 @@ spectre = (abs(fftshift(fft(noise, nfft))).^2)/noise_size;
 
 freq_axe = linspace(-.5, .5 - 1/nfft, nfft);
 
-figure
+figure 
 plot(freq_axe, spectre);
 title('Spectre de puissance')
 

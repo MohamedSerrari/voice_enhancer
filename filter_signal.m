@@ -3,9 +3,6 @@ function [signal_filtered] = filter_signal(signal_noise, packet_len, window_meth
 %% Constants
 overlap = 0.5;
 
-% ham = hamming(packet_len).';
-% ham = ones(1,packet_len);
-
 sig_len = length(signal_noise);
 signal_filtered = zeros(1,sig_len);
 packet_num = floor(sig_len / packet_len) / (1-overlap) - 1;
@@ -14,9 +11,12 @@ dtx = 1:packet_len;
 left = 1:packet_len*(1-overlap);
 right = packet_len*(1-overlap) + left;
 
+% Calculating the noise variance based on the first packet of samples
+[correlation, ~] = xcorr(signal_noise(dtx), 'unbiased');
+sigma_noise2 = max(correlation);
 
 for i=0:packet_num-1
-    packet_bruite = signal_noise(i*packet_len*overlap + dtx) ;%.* window_method;
+    packet_bruite = signal_noise(i*packet_len*overlap + dtx); % .* window_method;
     packet_filtered = filter_packet(packet_bruite, sigma_noise2, noise_reduction);
     packet_reamped = packet_filtered .* window_method;
     if (i == 0)
