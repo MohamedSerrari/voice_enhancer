@@ -1,4 +1,4 @@
-function [signal_filtered] = filter_signal(signal_noise, packet_len, window_method, noise_reduction)
+function [signal_filtered] = filter_signal(signal_noise, packet_len, window_method, sigma_noise2, noise_reduction)
 
 %% Constants
 overlap = 0.5;
@@ -25,7 +25,7 @@ for i=0:packet_num-1
         old_sig = signal_filtered((i-1)*packet_len*overlap + right);
         new_sig = packet_reamped(left).* window_method(left);
         signal_filtered(i*packet_len*overlap + left) = (old_sig + new_sig)./(window_method(left)+window_method(right));
-        signal_filtered(i*packet_len*overlap + right) = packet_reamped(right).*window_method(right);
+        signal_filtered(i*packet_len*overlap + right) = packet_reamped(right);
     end
 end
 

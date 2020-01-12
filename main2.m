@@ -5,6 +5,10 @@ clc;
 %%
 load('fcno04fz.mat');
 signal = fcno04fz;
+
+% load('fcno03fz.mat');
+% signal = fcno03fz;
+
 signal = signal';
 fe     = 8000;
 RSB    = 10;
@@ -21,27 +25,27 @@ noise_reduction = 5/sqrt(3); % 3;
 
 %%
 packet_len = 400;
-signal_filtre = filter_signal(signal_bruite, 400, sigma_noise2, noise_reduction);
+signal_filtre = filter_signal(signal_bruite, packet_len, hamming(packet_len).' ,noise_reduction);
 
 %%
-soundsc(signal_filtre);
+% soundsc(signal_filtre);
 
 %% Signal plot
-% figure
-% subplot(3,1,1)
-% plot(signal)
-% title('signal original')
-% xlim([1e4, 2e4]);
-% 
-% subplot(3,1,2)
-% plot(signal_bruite);
-% title('signal bruite')
-% xlim([1e4, 2e4]);
-% 
-% subplot(3,1,3)
-% plot(signal_filtre);
-% title('signal filtre')
-% xlim([1e4, 2e4]);
+figure
+subplot(3,1,1)
+plot(signal)
+title('signal original')
+xlim([1e4, 2e4]);
+
+subplot(3,1,2)
+plot(signal_bruite);
+title('signal bruite')
+xlim([1e4, 2e4]);
+
+subplot(3,1,3)
+plot(signal_filtre);
+title('signal filtre')
+xlim([1e4, 2e4]);
 % 
 %% Spectrogramm
 window = 400;
